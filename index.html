@@ -1,12 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Full Screen Canvas</title>
+    <title>Modificar Parámetros</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <h1>Modificar Parámetros</h1>
+    <div id="controlPanel" >
+        <!-- Elementos de entrada aquí -->
+        <div>
+            <label for="nValue">N:</label>
+            <input type="number" id="nValue" value="4">
+            
+            <label for="n2Value">N2:</label>
+            <input type="number" id="n2Value" value="3">
+        </div>
+        <div>
+            <label for="factor1">Factor para N:</label>
+            <input type="number" id="factor1" step="0.1" value="3">
+
+            <label for="factor2">Factor para N2:</label>
+            <input type="number" id="factor2" step="0.1" value="1">
+        </div>
+        <div>
+            <label for="rectFactor">Factor de Rectángulo:</label>
+            <input type="number" id="rectFactor" step="0.1" value="0.8">
+        </div>
+
+
+        <button onclick="draw()">Aplicar Cambios</button>
+    </div>
+<div id="canvasContainer" class="canvas-container">
     <canvas id="myCanvas"></canvas>
-</body>
+</div>
 <script src="main.js"></script>
+</body>
 </html>
+

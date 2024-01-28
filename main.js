@@ -9,38 +9,13 @@ canvas.height = window.innerHeight;
 var ctx = canvas.getContext("2d");
 
 //Fill the canvas with dark gray:
-ctx.fillStyle = "#222"; // set the color
-ctx.fillRect(0, 0, canvas.width, canvas.height);  //apply the color to the whole canvas
+// ctx.fillStyle = "#222"; // set the color
+// ctx.fillRect(0, 0, canvas.width, canvas.height);  //apply the color to the whole canvas
 
 // Move the origin to the center of the canvas:
 ctx.translate(canvas.width/2, canvas.height/2);
 // Flip the y-axis:
 ctx.scale(1,-1);
-// This line sets the color used for strokes (lines).
-ctx.strokeStyle = "#FFFFFF";
-// Set the line width:
-ctx.lineWidth = 3;
-
-// ------------------------------------------------------------
-
-// Let's create some synthetic data, which are just random numbers in different ranges:
-N = 4;
-N2 = 3;
-let points = [];
-for (let i = 0; i < N; i++) {
-    points.push([Math.random() * 3 - 1.5, Math.random() * 600 - 300]);
-    console.log(points[i]);
-}
-
-let points2 = [];
-for (let i = 0; i < N2; i++) {
-    points2.push([Math.random() * 1 - .5, Math.random() * 30 - .5]);
-}
-
-// Create a new rectangle to scale the points to the canvas size:
-
-let newRect = [-1, 1, -1, 1].map(number => number * .8* Math.min(canvas.width, canvas.height)/2); // [minX, maxX, minY, maxY]
-let newRect2 = [.5, 1, .5, 1].map(number => number * .8* Math.min(canvas.width, canvas.height)/2); // [minX, maxX, minY, maxY]
 
 // ------------------------------------------------------------
 // FUNCTIONS:
@@ -128,17 +103,42 @@ function drawScatterPoints(points, color) {
 // ------------------------------------------------------------
 // OUTPUT:
 function draw(){
+    // Clear the canvas:
+    ctx.fillStyle = "#000000"; // set the color
+    ctx.fillRect(-canvas.width/2, -canvas.height/2, canvas.width, canvas.height);  //apply the color to the whole canvas
+
+    N = 4;
+    N2 = 3;
+    let points = [];
+    for (let i = 0; i < N; i++) {
+        points.push([Math.random() * 3 - 1.5, Math.random() * 600 - 300]);
+    }
+    
+    let points2 = [];
+    for (let i = 0; i < N2; i++) {
+        points2.push([Math.random() * 1 - .5, Math.random() * 30 - .5]);
+    }
+    
+    // Create a new rectangle to scale the points to the canvas size:
+    
+    let newRect = [-1, 1, -1, 1].map(number => number * .8* Math.min(canvas.width, canvas.height)/2); // [minX, maxX, minY, maxY]
+    let newRect2 = [.5, 1, .5, 1].map(number => number * .8* Math.min(canvas.width, canvas.height)/2); // [minX, maxX, minY, maxY]
+
+
     pointsTransformed1 = scalePoints(points, newRect);
     pointsTransformed2 = scalePoints(points2, newRect2);
     drawScatterPoints(points,"#FF00FF");
-    drawScatterPoints(points2,"#00FFFF");
     drawScatterPoints(pointsTransformed1, "#FF000F");
+    drawScatterPoints(points2,"#00FFFF");
     drawScatterPoints(pointsTransformed2, "#00FF0F");    
     drawAxes(ctx, canvas.width, canvas.height);
-    window.requestAnimationFrame(draw);
+    //window.requestAnimationFrame(draw);
 }
+
+
+
 // The draw() function is executed here:
-draw();
+//draw();
 
 // ------------------------------------------------------------
 // Code to draw a line:
