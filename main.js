@@ -17,6 +17,15 @@ ctx.translate(canvas.width/2, canvas.height/2);
 // Flip the y-axis:
 ctx.scale(1,-1);
 
+// Variables globales
+
+let points = [];
+let points2 = [];
+let newRectAux = [];
+let newRect2Aux = [];
+let rectFactor = 0.8;
+
+
 // ------------------------------------------------------------
 // FUNCTIONS:
 
@@ -100,45 +109,101 @@ function drawScatterPoints(points, color) {
     });
 }
 
-// ------------------------------------------------------------
-// OUTPUT:
-function draw(){
-    // Clear the canvas:
-    ctx.fillStyle = "#000000"; // set the color
-    ctx.fillRect(-canvas.width/2, -canvas.height/2, canvas.width, canvas.height);  //apply the color to the whole canvas
+function generaPuntosyRectangulo() {
+    // Actualiza los inputs:
+    // Actualiza los inputs:
+    const N = parseInt(document.getElementById('nValue').value, 10);
+    const N2 = parseInt(document.getElementById('n2Value').value, 10);
+    const factor1 = parseFloat(document.getElementById('factor1').value);
+    const factor2 = parseFloat(document.getElementById('factor2').value);
+    const factor3 = parseFloat(document.getElementById('factor3').value);
+    const factor4 = parseFloat(document.getElementById('factor4').value);
+    rectFactor = parseFloat(document.getElementById('rectFactor').value);
 
-    N = 4;
-    N2 = 3;
-    let points = [];
+    let newRectMinX = parseFloat(document.getElementById('newRectMinX').value);
+    let newRectMaxX = parseFloat(document.getElementById('newRectMaxX').value);
+    let newRectMinY = parseFloat(document.getElementById('newRectMinY').value);
+    let newRectMaxY = parseFloat(document.getElementById('newRectMaxY').value);
+
+    // Define newRect usando los valores capturados
+    newRectAux = [newRectMinX, newRectMaxX, newRectMinY, newRectMaxY];
+
+    // Captura los valores de los campos de entrada para newRect2
+    let newRect2MinX = parseFloat(document.getElementById('newRect2MinX').value);
+    let newRect2MaxX = parseFloat(document.getElementById('newRect2MaxX').value);
+    let newRect2MinY = parseFloat(document.getElementById('newRect2MinY').value);
+    let newRect2MaxY = parseFloat(document.getElementById('newRect2MaxY').value);
+
+    newRect2Aux = [newRect2MinX, newRect2MaxX, newRect2MinY, newRect2MaxY];
+
+    // Create a list of random points:
+    points = [];
     for (let i = 0; i < N; i++) {
-        points.push([Math.random() * 3 - 1.5, Math.random() * 600 - 300]);
+        points.push([Math.random() * factor1 - factor1/2, Math.random() * factor2 - factor2/2]);
     }
     
-    let points2 = [];
+    points2 = [];
     for (let i = 0; i < N2; i++) {
-        points2.push([Math.random() * 1 - .5, Math.random() * 30 - .5]);
+        points2.push([Math.random() * factor3 - factor3/2, Math.random() * factor4 - factor4/2]);
     }
     
     // Create a new rectangle to scale the points to the canvas size:
     
-    let newRect = [-1, 1, -1, 1].map(number => number * .8* Math.min(canvas.width, canvas.height)/2); // [minX, maxX, minY, maxY]
-    let newRect2 = [.5, 1, .5, 1].map(number => number * .8* Math.min(canvas.width, canvas.height)/2); // [minX, maxX, minY, maxY]
+    newRect = newRectAux.map(number => number * rectFactor* Math.min(canvas.width, canvas.height)/2); // [minX, maxX, minY, maxY]
+    newRect2 = newRect2Aux.map(number => number * rectFactor* Math.min(canvas.width, canvas.height)/2); // [minX, maxX, minY, maxY]
 
+}
 
-    pointsTransformed1 = scalePoints(points, newRect);
-    pointsTransformed2 = scalePoints(points2, newRect2);
+// ------------------------------------------------------------
+// OUTPUT:
+function draw(){
+    canvas.width = window.innerWidth; 
+    canvas.height = window.innerHeight;
+    // Move the origin to the center of the canvas:
+    ctx.translate(canvas.width/2, canvas.height/2);
+    // Flip the y-axis:
+    ctx.scale(1,-1);
+    // Clear the canvas:
+    ctx.fillStyle = "#000000"; // set the color
+    ctx.clearRect(-canvas.width/2, -canvas.height/2, canvas.width, canvas.height);  //apply the color to the whole canvas
+    
+    generaPuntosyRectangulo();
+    let pointsTransformed1 = scalePoints(points, newRect);
+    let pointsTransformed2 = scalePoints(points2, newRect2);
     drawScatterPoints(points,"#FF00FF");
     drawScatterPoints(pointsTransformed1, "#FF000F");
     drawScatterPoints(points2,"#00FFFF");
     drawScatterPoints(pointsTransformed2, "#00FF0F");    
     drawAxes(ctx, canvas.width, canvas.height);
-    //window.requestAnimationFrame(draw);
 }
 
+function handleResize() {
+    canvas.width = window.innerWidth; 
+    canvas.height = window.innerHeight;
+    // Move the origin to the center of the canvas:
+    ctx.translate(canvas.width/2, canvas.height/2);
+    // Flip the y-axis:
+    ctx.scale(1,-1);
+    // Clear the canvas:
+    ctx.fillStyle = "#000000"; // set the color
+    ctx.clearRect(-canvas.width/2, -canvas.height/2, canvas.width, canvas.height);  //apply the color to the whole canvas
 
+    let newRect = newRectAux.map(number => number * rectFactor* Math.min(canvas.width, canvas.height)/2); // [minX, maxX, minY, maxY]
+    let newRect2 = newRect2Aux.map(number => number * rectFactor* Math.min(canvas.width, canvas.height)/2); // [minX, maxX, minY, maxY]
 
-// The draw() function is executed here:
-//draw();
+    let pointsTransformed1 = scalePoints(points, newRect);
+    let pointsTransformed2 = scalePoints(points2, newRect2);
+    drawScatterPoints(points,"#FF00FF");
+    drawScatterPoints(pointsTransformed1, "#FF000F");
+    drawScatterPoints(points2,"#00FFFF");
+    drawScatterPoints(pointsTransformed2, "#00FF0F");    
+    drawAxes(ctx, canvas.width, canvas.height);
+
+}
+
+// Agrega el detector de eventos de redimensionamiento
+window.addEventListener('resize', handleResize);
+
 
 // ------------------------------------------------------------
 // Code to draw a line:
